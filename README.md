@@ -23,10 +23,12 @@ which can use one of five possible filters for each row of the image.
 Two bits of the payload can thus be placed into each row of the
 image. Filters 0-3 are used for payload data, using their 2-bit
 binary representation:
-0 - 00
-1 - 01
-2 - 10
-3 - 11
+
+    0 - 00
+    1 - 01
+    2 - 10
+    3 - 11
+
 filter type 4 is used by the encoder for rows after the payload
 content, and is ignored by the decoder.
 
@@ -37,8 +39,14 @@ and only transmitting 7-bits per character.
 
 This gives three possible payload compression methods, and the first
 row's filter is used to encode which type was used:
-compression - filter value
-    none    -   0
-    zlib    -   1
-    7-bit   -   2
+
+    compression - filter value
+        none    -   0    
+        zlib    -   1    
+        7-bit   -   2
     
+Since only 2 bits can be encoding into each row of the image,
+this is a small-payload-friendly method.
+
+Future improvements could include allowing multiple input files 
+to be used, spreading the payload across the set.
