@@ -52,3 +52,5 @@ this is a small-payload-friendly method.
 
 Future improvements could include allowing multiple input files 
 to be used, spreading the payload across the set.
+Also, the code currently operates on the entire image data
+in one chunk. This could likely use modification.
