@@ -9,7 +9,7 @@
 Extract Sneaky Payload from PNG Image's row filter information
 
 Usage:
-python3 png_sneak_decode.py input_filename output_filename
+python3 png_sneak_decode.py input_file output_file
 
 This stegonagraphic tool extracts a payload from a PNG file.
 It is assumed that the payload was encoded into the file using the
