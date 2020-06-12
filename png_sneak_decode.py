@@ -3,6 +3,7 @@
 # png_sneak_decode.py - Extract a Sneaky payload from a PNG image file
 #
 # By timescape
+# https://github.com/dreamtimescape/png_sneak
 # --------------------------------------------------------------------
 """
 Extract Sneaky Payload from PNG Image's row filter information
