@@ -5,6 +5,7 @@
 #
 # By timescape
 # Started with code provided by RSAXVC - Thanks!
+# https://github.com/dreamtimescape/png_sneak
 # --------------------------------------------------------------------
 """
 Sneak a payload into a PNG Image without altering pixel content
