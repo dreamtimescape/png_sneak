@@ -3,7 +3,6 @@
 # png_sneak_decode.py - Extract a Sneaky payload from a PNG image file
 #
 # By timescape
-# https://github.com/dreamtimescape/png_sneak
 # --------------------------------------------------------------------
 """
 Extract Sneaky Payload from PNG Image's row filter information
@@ -31,8 +30,8 @@ binary representation:
 2 - 10
 3 - 11
 
-filter type 4 is used by the encoder for rows after the payload
-content, and is ignored by the decoder.
+filter type 4 is used to indicate the end of the bitstream,
+it and any filter types afterward are ignored by the decoder.
 
 The payload is possibly compressed by zlib if it will reduce
 in size. If the payload is pure ASCII, an additional compression
@@ -256,7 +255,11 @@ def main():
         # 4 = ignore
         else:
             if row_filter != 4:
+                # Pull out the two data bits
                 out_bits += str('{0:02b}'.format(row_filter))
+            else:
+                # filter = 4 indicates EOF
+                break
     
     # Print the compressed payload info
     if compress:
