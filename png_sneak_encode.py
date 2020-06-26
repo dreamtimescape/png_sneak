@@ -5,7 +5,6 @@
 #
 # By timescape
 # Started with code provided by RSAXVC - Thanks!
-# https://github.com/dreamtimescape/png_sneak
 # --------------------------------------------------------------------
 """
 Sneak a payload into a PNG Image without altering pixel content
@@ -35,8 +34,8 @@ binary representation:
 2 - 10
 3 - 11
 
-filter type 4 is used by the encoder for rows after the payload
-content, and is ignored by the decoder.
+filter type 4 is used to indicate the end of the bitstream,
+it and any filter types afterward are ignored by the decoder.
 
 The payload is possibly compressed by zlib if it will reduce
 in size. If the payload is pure ASCII, an additional compression
@@ -78,6 +77,9 @@ compress = 0
 # Global used for the bits of the payload.
 bits = BitStream()
 
+# Global used to know if the filter=4 EOF indicator has been placed
+eof = False
+
 # Global to indicate length of dashes '-' to output for print()
 num_dashes = 45
 
@@ -116,7 +118,7 @@ def adapt_stego(line, cfg, filter_obj):
         result = lines[compress]
     else:
         # Remaining lines encode the payload
-        filter = stego()
+        filter = stego(line, cfg, filter_obj)
         result = lines[filter]
         
     # Increment the row counter
@@ -153,7 +155,7 @@ def is_ascii(text):
             return False
     return True
 
-def stego():
+def stego(line, cfg, filter_obj):
     """
     Return 2 bits at a time until out of bits, then return 4
     """
@@ -162,9 +164,39 @@ def stego():
     # I don't know why?
     global bits
     
+    # Indicates we've put the filter=4 End of File indicator at the end
+    global eof
+    
     result = 4
     if (bits.len - bits._pos) > 1:
+        # As long as there are bits to encode...
         result = bits.read("uint:2")
+    elif eof:
+        # No more bits and We've already put the 
+        # EOF (filter=4) indicator in there
+        lines = filter_obj.filter_all(line)
+        
+        # adapt_sum from source png.py
+        # Finds the sum of each filtered line's data
+        # res = [sum(it) for it in lines]
+        
+        # adapt_entropy from source png.py
+        # Finds length of unique elements in each line's data
+        res = [len(set(it)) for it in lines]
+        
+        # A small set of informal tests seemed to show
+        # the entropy function was better than the sum
+        # function, both were better than 'all 4'
+        
+        # Get the index of the minimum
+        r = res.index(min(res))
+        result = r
+
+    else:
+        # No more bits, time to put in the EOF
+        result = 4
+        # Indicate we've placed the EOF
+        eof = True
         
     return result
 
