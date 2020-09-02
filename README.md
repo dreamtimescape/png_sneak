@@ -47,8 +47,8 @@ row's filter is used to encode which type was used:
         zlib    -   1    
         7-bit   -   2
     
-Since only 2 bits can be encoding into each row of the image,
-this is a small-payload-friendly method.
+Since only 2 bits can be encoded into each row of the image,
+this is a small-payload friendly method.
 
 Future improvements could include allowing multiple input files 
 to be used, spreading the payload across the set.
